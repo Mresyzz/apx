@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-            ref: fix/portable-tar-extraction
+          ref: fix/portable-tar-extraction
 
       - name: Run installer compatibility gate
         uses: Mresyzz/opsscript-gate@v0.8.0
