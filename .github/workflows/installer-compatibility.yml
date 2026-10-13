@@ -28,10 +28,23 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Add installation postcondition
+        shell: bash
+        run: |
+          {
+            printf '#!/usr/bin/env bash\n(\n'
+            cat install.sh
+            printf '\n)\ninstaller_status=$?\n[ "$installer_status" -eq 0 ] || exit "$installer_status"\n'
+            cat <<'EOF'
+          test -x "$HOME/.local/bin/apx" || { echo 'apx was not installed' >&2; exit 1; }
+          "$HOME/.local/bin/apx" --version
+          EOF
+          } > installer-smoke.sh
+
       - name: Run installer compatibility gate
-        uses: Mresyzz/opsscript-gate@v0.8.0
+        uses: Mresyzz/opsscript-gate@v0.9.4
         with:
-          script-path: install.sh
+          script-path: installer-smoke.sh
           shell: auto
           network: bridge
           packages: |
